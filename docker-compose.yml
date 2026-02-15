@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  synapse:
+    image: docker.io/matrixdotorg/synapse:latest
+    restart: always
+    environment:
+      - SYNAPSE_CONFIG_PATH=/data/homeserver.yaml
+    volumes:
+      - ./data:/data
+    depends_on:
+      - db
+    ports:
+      - 8448:8448/tcp
+
+  db:
+    image: docker.io/postgres:15-alpine
+    environment:
+      - POSTGRES_USER=synapse
+      - POSTGRES_PASSWORD=CHANGE_ME_0
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+    volumes:
+      - ./db:/var/lib/postgresql/data
+
+  auth-service:
+    image: ghcr.io/element-hq/lk-jwt-service:latest
+    container_name: element-call-jwt
+    hostname: auth-server
+    environment:
+      - LIVEKIT_JWT_PORT=8080
+      - LIVEKIT_URL=https://matrix-rtc.domain.tld/livekit/sfu 
+      - LIVEKIT_KEY=devkey
+      - LIVEKIT_SECRET=CHANGE_ME_1
+      - LIVEKIT_FULL_ACCESS_HOMESERVERS=domain.tld
+    restart: always
+    ports:
+      - 8080:8080
+
+  livekit:
+    image: livekit/livekit-server:latest
+    container_name: element-call-livekit
+    command: --config /etc/livekit.yaml
+    ports:
+      - 7880:7880/tcp
+      - 7881:7881/tcp
+      - 7882:7882/udp
+    restart: always
+    volumes:
+      - ./livekit/config.yaml:/etc/livekit.yaml:ro
+
+  well-known-server:
+    image: nginx:alpine
+    volumes:
+      - ./well-known:/usr/share/nginx/html/.well-known:ro
+      - ./nginx-conf:/etc/nginx
+    network_mode: "host"

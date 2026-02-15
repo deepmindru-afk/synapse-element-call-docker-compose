@@ -1,0 +1,115 @@
+# Configuration file for Synapse.
+#
+# This is a YAML file: see [1] for a quick introduction. Note in particular
+# that *indentation is important*: all the elements of a list or dictionary
+# should have the same indentation.
+#
+# [1] https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html
+#
+# For more information on how to configure Synapse, including a complete accounting of
+# each option, go to docs/usage/configuration/config_documentation.md or
+# https://element-hq.github.io/synapse/latest/usage/configuration/config_documentation.html
+server_name: "domain.tld"
+public_baseurl: "https://matrix.domain.tld/"
+pid_file: /data/homeserver.pid
+listeners:
+  - port: 8448
+    resources:
+    - compress: false
+      names:
+      - client
+      - federation
+    tls: false
+    type: http
+    x_forwarded: true
+database:
+  name: sqlite3
+  args:
+    database: /data/homeserver.db
+log_config: "/data/domain.tld.log.config"
+media_store_path: /data/media_store
+registration_shared_secret: "CHANGE_ME_2"
+report_stats: false
+macaroon_secret_key: "CHANGE_ME_3"
+form_secret: "CHANGE_ME_4"
+signing_key_path: "/data/domain.tld.signing.key"
+trusted_key_servers:
+  - server_name: "matrix.org"
+
+# room publication settings
+room_list_publication_rules:
+- user_id: '@admin:domain.tld'
+  action: allow
+
+# Registration
+enable_registration: true
+registration_requires_token: true
+registrations_require_3pid:
+- email
+allow_guest_access: false
+
+# encyption
+encryption_enabled_by_default_for_room_type: all
+
+# captcha
+recaptcha_public_key: CHANGE_ME_5
+recaptcha_private_key: CHANGE_ME_6
+
+# email, duh
+email:
+  smtp_host: mail.domain.tld
+  smtp_port: 465
+  smtp_user: matrix@domain.tld
+  smtp_pass: CHANGE_ME_7
+  force_tls: true
+  require_transport_security: true
+  enable_tls: true
+  tlsname: mail.domain.tld
+  notif_from: Matrix <matrix@domain.tld>
+  app_name: Matrix
+  enable_notifs: true
+  notif_for_new_users: true
+  client_base_url: https://matrix.domain.tld/riot
+  validation_token_lifetime: 15m
+  invite_client_location: https://matrix.domain.tld
+  subjects:
+    message_from_person_in_room: '[%(app)s] You have a message on %(app)s from %(person)s
+      in the %(room)s room...'
+    message_from_person: '[%(app)s] You have a message on %(app)s from %(person)s...'
+    messages_from_person: '[%(app)s] You have messages on %(app)s from %(person)s...'
+    messages_in_room: '[%(app)s] You have messages on %(app)s in the %(room)s room...'
+    messages_in_room_and_others: '[%(app)s] You have messages on %(app)s in the %(room)s
+      room and others...'
+    messages_from_person_and_others: '[%(app)s] You have messages on %(app)s from
+      %(person)s and others...'
+    invite_from_person_to_room: '[%(app)s] %(person)s has invited you to join the
+      %(room)s room on %(app)s...'
+    invite_from_person: '[%(app)s] %(person)s has invited you to chat on %(app)s...'
+    password_reset: '[%(server_name)s] Password reset'
+    email_validation: '[%(server_name)s] Validate your email'
+
+# element call
+experimental_features:
+  # MSC3266: Room summary API. Used for knocking over federation
+  msc3266_enabled: true
+  # MSC4222 needed for syncv2 state_after. This allow clients to
+  # correctly track the state of the room.
+  msc4222_enabled: true
+
+# The maximum allowed duration by which sent events can be delayed, as
+# per MSC4140.
+max_event_delay_duration: 24h
+
+rc_message:
+  # This needs to match at least e2ee key sharing frequency plus a bit of headroom
+  # Note key sharing events are bursty
+  per_second: 0.5
+  burst_count: 30
+
+rc_delayed_event_mgmt:
+  # This needs to match at least the heart-beat frequency plus a bit of headroom
+  # Currently the heart-beat is every 5 seconds which translates into a rate of 0.2s
+  per_second: 1
+  burst_count: 20
+
+# vim:ft=yaml
