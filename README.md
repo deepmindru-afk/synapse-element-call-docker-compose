@@ -193,6 +193,11 @@ This will prompt you to enter a password for the username you added under `-u YO
 
 Go to `Settings > Help & About > Advanced` and copy your access token. This will server as your admin token for use in authenticated API calls.
 
+For the purposes of illustration, the admin token we got was
+```
+syt_emF5_msYxJbbaNtWqDWOhZWzB_2hFPeK
+```
+
 ## Generate a registration token
 To have other users be able to register for an account, you will have to have a registration token they can use to complete the account setup:
 ```bash
