@@ -36,17 +36,17 @@ services:
     ports:
       - 8080:8080
 
-  livekit:
-    image: livekit/livekit-server:latest
-    container_name: element-call-livekit
-    command: --config /etc/livekit.yaml
-    ports:
-      - 7880:7880/tcp
-      - 7881:7881/tcp
-      - 7882:7882/udp
-    restart: always
-    volumes:
-      - ./livekit/config.yaml:/etc/livekit.yaml:ro
+  #livekit:
+  #  image: livekit/livekit-server:latest
+  #  container_name: element-call-livekit
+  #  command: --config /etc/livekit.yaml
+  #  ports:
+  #    - 7880:7880/tcp
+  #    - 7881:7881/tcp
+  #    - 7882:7882/udp
+  #  restart: always
+  #  volumes:
+  #    - ./livekit/config.yaml:/etc/livekit.yaml:ro
 
   well-known-server:
     image: nginx:alpine
