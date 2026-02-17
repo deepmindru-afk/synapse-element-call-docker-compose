@@ -53,7 +53,8 @@ services:
     volumes:
       - ./well-known:/usr/share/nginx/html/.well-known:ro
       - ./nginx-conf:/etc/nginx
-    ports:
+    #ports:
+    expose:
       - 80:80
       - 81:81
     #network_mode: "host"
