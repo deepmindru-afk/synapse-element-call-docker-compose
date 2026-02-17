@@ -53,4 +53,4 @@ services:
     volumes:
       - ./well-known:/usr/share/nginx/html/.well-known:ro
       - ./nginx-conf:/etc/nginx
-    network_mode: "host"
+    #network_mode: "host"
