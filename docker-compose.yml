@@ -55,6 +55,6 @@ services:
       - ./nginx-conf:/etc/nginx
     #ports:
     expose:
-      - 80:80
-      - 81:81
+      - 80
+      - 81
     #network_mode: "host"
